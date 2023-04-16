@@ -27,7 +27,6 @@ class CommentSerializer(serializers.ModelSerializer):
         slug_field='username'
     )
 
-
     class Meta:
         model = Comment
         fields = ('id', 'author', 'post', 'text', 'created')
