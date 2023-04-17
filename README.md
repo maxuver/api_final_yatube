@@ -1,5 +1,5 @@
 ### Description
-Yatub API is a social network project that includes the following features: posting messages, commenting on posts, subscribing and unsubscribing from authors.
+Yatube API is a social network project that includes the following features: posting messages, commenting on posts, subscribing and unsubscribing from authors.
 ### Technologies
 Python 3.9, Django 2.2.16, DRF, JWT + Djoser
 ### Running the project in dev mode
@@ -7,7 +7,7 @@ Python 3.9, Django 2.2.16, DRF, JWT + Djoser
 - Install and activate the virtual environment considering Python 3.9:
 ```bash
 py -3.9 -m venv venv
-venv/Scripts/activate
+source venv/Scripts/activate
 python -m pip install --upgrade pip
 ```
 - Then install all the dependencies from the requirements.txt file:
