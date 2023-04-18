@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, filters
+from rest_framework import viewsets, filters
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -10,6 +10,7 @@ from .serializers import (
     GroupSerializer, PostSerializer, CommentSerializer, FollowSerializer
 )
 from .permissions import IsAuthorOrReadOnly
+from .mixins import ListCreateViewSet
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -32,9 +33,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
-        queryset = post.comments.all()
-        return queryset
+        post = get_object_or_404(Post, pk=self.kwargs.get("post_id"))
+        return post.comments
 
     def perform_create(self, serializer):
         post_id = self.kwargs.get("post_id")
@@ -44,18 +44,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         )
 
 
-class FollowViewSet(mixins.ListModelMixin,
-                    mixins.CreateModelMixin,
-                    viewsets.GenericViewSet):
+class FollowViewSet(ListCreateViewSet):
     serializer_class = FollowSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username',)
 
     def get_queryset(self):
-        follows = Follow.objects.select_related(
+        follows = Follow.objects.filter(
+            user=self.request.user).prefetch_related(
             'following'
-        ).filter(user=self.request.user)
+        )
         return follows
 
     def perform_create(self, serializer):
